@@ -5,17 +5,27 @@ using UnityEngine;
 public class LifePoints : MonoBehaviour
 {
 
-    [SerializeField] int lifePoints = 100;
+    public int lifePoints = 100;
     bool isDead = false;
 
+    int flyStealInsects = 1;
+    int flyStealRabbit = 5;
+
+    // PostProcessing
+    GameObject postProcessingGO;
+
+    // Scripts
     RabbitFalls fallScript;
+    CameraShake shakeScript;
 
     // Start is called before the first frame update
     void Start()
     {
 
         fallScript = GetComponent<RabbitFalls>();
-
+        shakeScript = GameObject.Find("CM vcam1").GetComponent<CameraShake>();
+        postProcessingGO = GameObject.Find("PostProcessingGO");
+        postProcessingGO.SetActive(false);
     }
 
     // Update is called once per frame
@@ -24,6 +34,11 @@ public class LifePoints : MonoBehaviour
         if(lifePoints <= 0 && !isDead)
         {
             Debug.Log("Chuchalas you ded");
+            if (!fallScript.isRabbit)
+            {
+                Destroy(this.gameObject);
+            }
+
             isDead = !isDead;
         }
     }
@@ -32,13 +47,21 @@ public class LifePoints : MonoBehaviour
     {
         if (_col.CompareTag("Enemy"))
         {
+
+            shakeScript.ShakeCamera(2f, 0.1f);
+
             if (fallScript.isRabbit)
             {
-                lifePoints -= 5;
+                lifePoints -= flyStealRabbit;
             }else if (!fallScript.isRabbit) {
-                lifePoints -= 1;
+                lifePoints -= flyStealInsects;
             }
-            
+
+            if (lifePoints <= 10 && !isDead)
+            {
+                postProcessingGO.SetActive(true);
+            }
+
         }
     }
 

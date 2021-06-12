@@ -23,14 +23,14 @@ public class RabbitFalls : MonoBehaviour
 
     public float waitTime = 0.2f;
 
-    public PlayerMovement moveScript;
 
+    // Scripts
+    LifePoints lifeScript;
     public bool isRabbit = true;
 
     private void Awake()
     {
-        moveScript = GetComponent<PlayerMovement>();
-
+        lifeScript = GetComponent<LifePoints>();
         rb = GetComponent<Rigidbody2D>();
         
         //spriteAnim = GameObject.Find("Player Sprite").GetComponent<Animator>();
@@ -42,7 +42,7 @@ public class RabbitFalls : MonoBehaviour
         // Check if is on ground
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, groundMask);
 
-        if (Input.GetKeyDown(KeyCode.J))
+        if (Input.GetKeyDown(KeyCode.J) && lifeScript.lifePoints > 0)
         {
             TransformIntoAnimal();
         }
@@ -60,7 +60,6 @@ public class RabbitFalls : MonoBehaviour
     {
         if (isRabbit)
         {
-            //rb.AddForce(transform.up * 100);
             rb.velocity = Vector2.up *  upVelocity;
             StartCoroutine(WaitToRabbit());
 

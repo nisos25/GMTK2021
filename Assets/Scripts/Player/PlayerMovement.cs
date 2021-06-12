@@ -14,13 +14,16 @@ public class PlayerMovement : MonoBehaviour
 
     private Animator flipAnim;
     // private Animator spriteAnim;
-
+    
+    // Scripts
     RabbitFalls fallScript;
+    LifePoints lifeScript;
 
     // Start is called before the first frame update
     void Start()
     {
         fallScript = GetComponent<RabbitFalls>();
+        lifeScript = GetComponent<LifePoints>();
 
         rb = GetComponent<Rigidbody2D>();
         mySR = GetComponentInChildren<SpriteRenderer>();
@@ -31,10 +34,17 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-        moveInput.x = Input.GetAxis("Horizontal");
-        moveInput.y = Input.GetAxis("Vertical");
-        moveInput.Normalize();
+     
+        if(lifeScript.lifePoints > 0)
+        {
+            moveInput.x = Input.GetAxis("Horizontal");
+            moveInput.y = Input.GetAxis("Vertical");
+            moveInput.Normalize();
+        }
+        else
+        {
+            moveInput = Vector2.zero;
+        }
 
         
     }
