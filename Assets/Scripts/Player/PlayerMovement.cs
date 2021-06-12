@@ -13,7 +13,7 @@ public class PlayerMovement : MonoBehaviour
     private SpriteRenderer mySR;
 
     private Animator flipAnim;
-    // private Animator spriteAnim;
+    private Animator spriteAnim;
     
     // Scripts
     RabbitFalls fallScript;
@@ -25,10 +25,12 @@ public class PlayerMovement : MonoBehaviour
         fallScript = GetComponent<RabbitFalls>();
         lifeScript = GetComponent<LifePoints>();
 
+
         rb = GetComponent<Rigidbody2D>();
         mySR = GetComponentInChildren<SpriteRenderer>();
         flipAnim = GameObject.Find("Flipper").GetComponent<Animator>();
-        // spriteAnim = GameObject.Find("Player Sprite").GetComponent<Animator>();
+        spriteAnim = GameObject.Find("Player Sprite").GetComponent<Animator>();
+
     }
 
     // Update is called once per frame
@@ -54,12 +56,38 @@ public class PlayerMovement : MonoBehaviour
         if (fallScript.isRabbit)
         {
             rb.velocity = new Vector2(moveInput.x * moveSpeed, rb.velocity.y);
+
+            // Animation Walk/Idle
+            if (fallScript.isGrounded)
+            {
+                if (moveInput.x != 0)
+                {
+                    // Walk animation
+                    spriteAnim.SetInteger("moveAnim", 1);
+                }
+                else
+                {
+                    // Idle animation
+                    spriteAnim.SetInteger("moveAnim", 0);
+                }
+            }
+            else
+            {
+                // Fall animation
+                spriteAnim.SetInteger("moveAnim", 2);
+            }
+
+
+
+            
         }
         else
         {
+            // Fly animation
+            spriteAnim.SetInteger("moveAnim", 3);
             rb.velocity = new Vector2(moveInput.x * moveSpeed, moveInput.y * moveSpeed);
         }
-        //spriteAnim.SetFloat("Move Speed", rb.velocity.magnitude);
+
 
         FlipAnim();
     }

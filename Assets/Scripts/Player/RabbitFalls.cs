@@ -14,7 +14,7 @@ public class RabbitFalls : MonoBehaviour
     public float lowJumpMultiplier = 2f;
 
     // Check ground variables
-    [SerializeField] bool isGrounded;
+    public bool isGrounded;
     public Transform groundCheck;
     public float checkRadius;
     public LayerMask groundMask;
