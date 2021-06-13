@@ -11,7 +11,8 @@ public class EnemyController : MonoBehaviour
     
     [SerializeField] private GameObject attackObjective;
     [SerializeField] private Transform tonguePivot;
-    [SerializeField] private GameObject tongueGfx;
+    [SerializeField] private SpriteRenderer tongueGfx;
+    [SerializeField] private SpriteRenderer tongue2; 
     
     
     private float lookRotation = 180;
@@ -54,13 +55,16 @@ public class EnemyController : MonoBehaviour
                 
                 if (!(attackTime <= 0)) return;
                 attackTime = originalAttackTime;
-                tongueGfx.SetActive(true);
+                tongueGfx.enabled = true;
+                tongue2.enabled = true;
                 StartCoroutine(Attack(distance));
             }
         }
         else
         {
             attackTime = originalAttackTime;
+            tongueGfx.enabled = false;
+            tongue2.enabled = false;
             ResetTongueRotation();
         }
     }
@@ -69,14 +73,15 @@ public class EnemyController : MonoBehaviour
     {
         yield return new WaitForSeconds(0.01f);
         
-        if (tonguePivot.transform.localScale.y >= distance - .5f )
+        if (tongueGfx.transform.localScale.y >= distance - 1f )
         {
             yield return new WaitForSeconds(0.1f);
             StartCoroutine(ReturnToTonguePosition());
             yield break;
         }
 
-        tonguePivot.transform.localScale += new Vector3(0, tongueVelocity, 0);
+        tongueGfx.transform.localScale += new Vector3(0, tongueVelocity, 0);
+        tongue2.transform.position += new Vector3(-tongueVelocity, 0, 0);
         attacking = true;
         yield return StartCoroutine(Attack(distance));
     }
@@ -85,14 +90,16 @@ public class EnemyController : MonoBehaviour
     {
         yield return new WaitForSeconds(0.01f);
         
-        if (tonguePivot.transform.localScale.y <= 0.5f)
+        if (tongueGfx.transform.localScale.y <= 0.5f)
         {
             attacking = false;
-            tongueGfx.SetActive(false);
+            tongueGfx.enabled = false;
+            tongue2.enabled = false;
             yield break;
         }
 
-        tonguePivot.transform.localScale -= new Vector3(0, tongueVelocity, 0);
+        tongueGfx.transform.localScale -= new Vector3(0, tongueVelocity, 0);
+        tongue2.transform.localPosition = new Vector3(0, -.9f, 0);
         yield return StartCoroutine(ReturnToTonguePosition());
     }
     
