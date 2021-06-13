@@ -141,7 +141,6 @@ public class EnemyController : MonoBehaviour
 
     public void DestroyGameobject()
     {
-        Debug.Log("Gono");
         Destroy(gameObject);
     }
 }

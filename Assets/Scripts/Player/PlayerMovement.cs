@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-
+    [SerializeField] private GameObject Flies;
+    
+    private BoxCollider2D playerCollider;
     Rigidbody2D rb;
 
     public float moveSpeed = 12f;
@@ -22,6 +24,7 @@ public class PlayerMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        playerCollider = GetComponent<BoxCollider2D>();
         fallScript = GetComponent<RabbitFalls>();
         lifeScript = GetComponent<LifePoints>();
 
@@ -55,6 +58,9 @@ public class PlayerMovement : MonoBehaviour
     {
         if (fallScript.isRabbit)
         {
+            Flies.SetActive(false);
+            lifeScript.Sprite.gameObject.SetActive(true);
+            playerCollider.enabled = true;
             rb.velocity = new Vector2(moveInput.x * moveSpeed, rb.velocity.y);
 
             // Animation Walk/Idle
@@ -81,6 +87,9 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             // Fly animation
+            Flies.SetActive(true);
+            lifeScript.Sprite.gameObject.SetActive(false);
+            playerCollider.enabled = false;
             spriteAnim.SetInteger("moveAnim", 3);
             rb.velocity = new Vector2(moveInput.x * moveSpeed, moveInput.y * moveSpeed);
         }

@@ -1,19 +1,21 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class LifePoints : MonoBehaviour
 {
-    [SerializeField] private SpriteRenderer sprite;
+    [field: SerializeField] public SpriteRenderer Sprite { get; set; }
+    [SerializeField] private GameObject[] flies;
     
     public int lifePoints = 100;
     public bool isDead;
 
     int flyStealInsects = 1;
     int flyStealRabbit = 5;
-
+    
     // PostProcessing
     GameObject postProcessingGO;
 
@@ -22,10 +24,18 @@ public class LifePoints : MonoBehaviour
     CameraShake shakeScript;
     LevelManager levelScript;
 
+    private List<GameObject> fliesToKill = new List<GameObject>();
+    
     // Start is called before the first frame update
     void Start()
     {
+        for (int i = 0; i < flies.Length; i++)
+        {
+            fliesToKill.Add(flies[i]);
+        }
 
+        Debug.Log(fliesToKill.Count);
+        
         fallScript = GetComponent<RabbitFalls>();
         levelScript = GameObject.Find("GameManager").GetComponent<LevelManager>();
         shakeScript = GameObject.Find("CM vcam1").GetComponent<CameraShake>();
@@ -48,7 +58,7 @@ public class LifePoints : MonoBehaviour
     {
         if (_col.CompareTag("Enemy"))
         {
-            Vector2 direction = sprite.flipX ? Vector2.right : Vector2.left;
+            Vector2 direction = Sprite.flipX ? Vector2.right : Vector2.left;
 
             fallScript.Knockback(direction, 800);
             TakeDamage();
@@ -59,7 +69,7 @@ public class LifePoints : MonoBehaviour
     {
         EnemyController enemy ;
         
-        if (other.gameObject.TryGetComponent(out enemy))
+        if (other.gameObject.TryGetComponent(out enemy) && fallScript.isRabbit)
         {
             foreach (var contact in other.contacts)
             {
@@ -86,8 +96,11 @@ public class LifePoints : MonoBehaviour
 
     private void TakeDamage()
     {
-        shakeScript.ShakeCamera(2f, 0.1f);
+        //shakeScript.ShakeCamera(2f, 0.1f);
 
+        fliesToKill.First().gameObject.SetActive(false);
+        fliesToKill.RemoveAt(0);
+        
         if (fallScript.isRabbit)
         {
             lifePoints -= flyStealRabbit;
