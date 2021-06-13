@@ -17,6 +17,8 @@ public class LevelManager : MonoBehaviour
 
     public GameObject playerGO;
 
+    LifePoints lifeScript;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -33,7 +35,7 @@ public class LevelManager : MonoBehaviour
         winPanel = GameObject.Find("Win Panel");
 
         playerGO = GameObject.Find("Player");
-
+        lifeScript = playerGO.GetComponent<LifePoints>();
 
 
         level2.SetActive(false);
@@ -62,5 +64,24 @@ public class LevelManager : MonoBehaviour
             winPanel.SetActive(true);
         }
     }
+
+    public void ItDed()
+    {
+        lifeScript.isDead = false;
+        lifeScript.lifePoints = 100;
+        if (level1.activeSelf)
+        {
+            playerGO.transform.position = check1.transform.position;
+        }
+        else if (level2.activeSelf)
+        {
+            playerGO.transform.position = check2.transform.position;
+        }
+        else if (level3.activeSelf)
+        {
+            playerGO.transform.position = check3.transform.position;
+        }
+    }
+
 
 }

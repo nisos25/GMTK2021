@@ -28,18 +28,10 @@ public class Death : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            if (levelScript.level1.activeSelf)
-            {
-                playerGO.transform.position = check1.transform.position;
-            }else if (levelScript.level2.activeSelf)
-            {
-                playerGO.transform.position = check2.transform.position;
-            }else if (levelScript.level3.activeSelf)
-            {
-                playerGO.transform.position = check3.transform.position;
-            }
+            levelScript.ItDed();
         }
     }
+
 
 
 }

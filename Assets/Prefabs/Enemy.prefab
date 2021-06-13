@@ -240,9 +240,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8d66e6ef64912c4db4bd7130d303f71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackRadius: 3.5
+  attackRadius: 5
   rotationSpeed: 10
-  attackTime: 2
+  attackTime: 0.5
   tongueVelocity: 0.2
   attackObjective: {fileID: 0}
   tongueGfx: {fileID: 5009262059147635157}

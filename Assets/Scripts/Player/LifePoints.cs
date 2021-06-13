@@ -9,7 +9,7 @@ public class LifePoints : MonoBehaviour
     [SerializeField] private SpriteRenderer sprite;
     
     public int lifePoints = 100;
-    bool isDead;
+    public bool isDead;
 
     int flyStealInsects = 1;
     int flyStealRabbit = 5;
@@ -20,15 +20,18 @@ public class LifePoints : MonoBehaviour
     // Scripts
     RabbitFalls fallScript;
     CameraShake shakeScript;
+    LevelManager levelScript;
 
     // Start is called before the first frame update
     void Start()
     {
 
         fallScript = GetComponent<RabbitFalls>();
+        levelScript = GameObject.Find("GameManager").GetComponent<LevelManager>();
         shakeScript = GameObject.Find("CM vcam1").GetComponent<CameraShake>();
         postProcessingGO = GameObject.Find("PostProcessingGO");
         postProcessingGO.SetActive(false);
+        isDead = false;
     }
 
     // Update is called once per frame
@@ -36,13 +39,8 @@ public class LifePoints : MonoBehaviour
     {
         if(lifePoints <= 0 && !isDead)
         {
-            Debug.Log("Chuchalas you ded");
-            if (!fallScript.isRabbit)
-            {
-                Destroy(this.gameObject);
-            }
-
             isDead = !isDead;
+            levelScript.ItDed();
         }
     }
 
@@ -88,7 +86,7 @@ public class LifePoints : MonoBehaviour
 
     private void TakeDamage()
     {
-        //shakeScript.ShakeCamera(2f, 0.1f);
+        shakeScript.ShakeCamera(2f, 0.1f);
 
         if (fallScript.isRabbit)
         {
