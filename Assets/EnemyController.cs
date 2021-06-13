@@ -10,7 +10,6 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private float tongueVelocity;
     
     [SerializeField] private GameObject attackObjective;
-    [SerializeField] private Transform tonguePivot;
     [SerializeField] private SpriteRenderer tongueGfx;
     [SerializeField] private SpriteRenderer tongue2; 
     
@@ -19,8 +18,13 @@ public class EnemyController : MonoBehaviour
     private float originalAttackTime;
 
     private bool attacking;
-    private bool firstAttack = true;
+    private bool death;
+
     
+    private Animator animator;
+    private static readonly int Attacking = Animator.StringToHash("Attacking");
+    private static readonly int Death = Animator.StringToHash("Death");
+
     public float AttackTime
     {
         get => attackTime;
@@ -31,6 +35,11 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    private void Awake()
+    {
+        animator = GetComponent<Animator>();
+    }
+
     private void Start()
     {
         originalAttackTime = attackTime;
@@ -39,19 +48,24 @@ public class EnemyController : MonoBehaviour
     private void Update()
     {
         
-        float distance = Vector2.Distance(tonguePivot.position, attackObjective.transform.position);
+        float distance = Vector2.Distance(tongueGfx.transform.position, attackObjective.transform.position);
 
         if (distance < attackRadius)
         {
-            if (!attacking)
+            if (!attacking && !death)
             {
-                var direction = attackObjective.transform.position - tonguePivot.position;
+                var direction = attackObjective.transform.position - tongueGfx.transform.position;
 
                 lookRotation = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-                tonguePivot.rotation = Quaternion.Slerp(tonguePivot.rotation, Quaternion.Euler(0, 0, lookRotation + 90),
+                tongueGfx.transform.rotation = Quaternion.Slerp(tongueGfx.transform.rotation, Quaternion.Euler(0, 0, lookRotation + 90),
                     Time.deltaTime * rotationSpeed);
 
                 attackTime -= Time.deltaTime;
+
+                if (attackTime <= 0.5)
+                {
+                    animator.SetBool(Attacking, true);
+                }
                 
                 if (!(attackTime <= 0)) return;
                 attackTime = originalAttackTime;
@@ -62,6 +76,7 @@ public class EnemyController : MonoBehaviour
         }
         else
         {
+            animator.SetBool(Attacking, false);
             attackTime = originalAttackTime;
             tongueGfx.enabled = false;
             tongue2.enabled = false;
@@ -73,7 +88,7 @@ public class EnemyController : MonoBehaviour
     {
         yield return new WaitForSeconds(0.01f);
         
-        if (tongueGfx.transform.localScale.y >= distance - 1f )
+        if (tongueGfx.transform.localScale.y >= distance - 1f)
         {
             yield return new WaitForSeconds(0.1f);
             StartCoroutine(ReturnToTonguePosition());
@@ -81,7 +96,8 @@ public class EnemyController : MonoBehaviour
         }
 
         tongueGfx.transform.localScale += new Vector3(0, tongueVelocity, 0);
-        tongue2.transform.position += new Vector3(-tongueVelocity, 0, 0);
+        tongue2.transform.localScale = new Vector3(tongue2.transform.localScale.x, 1 / tongueGfx.transform.localScale.y,
+            1 / tongueGfx.transform.localScale.z);
         attacking = true;
         yield return StartCoroutine(Attack(distance));
     }
@@ -93,19 +109,19 @@ public class EnemyController : MonoBehaviour
         if (tongueGfx.transform.localScale.y <= 0.5f)
         {
             attacking = false;
+            animator.SetBool(Attacking,false);
             tongueGfx.enabled = false;
             tongue2.enabled = false;
             yield break;
         }
 
         tongueGfx.transform.localScale -= new Vector3(0, tongueVelocity, 0);
-        tongue2.transform.localPosition = new Vector3(0, -.9f, 0);
         yield return StartCoroutine(ReturnToTonguePosition());
     }
     
     private void ResetTongueRotation()
     {
-        tonguePivot.rotation = Quaternion.Slerp(tonguePivot.rotation, Quaternion.Euler(0, 0, 0),
+        tongueGfx.transform.rotation = Quaternion.Slerp(tongueGfx.transform.rotation, Quaternion.Euler(0, 0, 0),
             Time.deltaTime * rotationSpeed);
     }
 
@@ -117,6 +133,15 @@ public class EnemyController : MonoBehaviour
 
     public void KillEnemy()
     {
-        Destroy(this);
+        if (death) return;
+        
+        animator.SetTrigger(Death);
+        death = true;
+    }
+
+    public void DestroyGameobject()
+    {
+        Debug.Log("Gono");
+        Destroy(gameObject);
     }
 }

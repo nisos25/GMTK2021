@@ -286,7 +286,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4835ba6a0c44e8c42a15bfc7b391c01b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  knockbackForce: 100
+  knockbackForce: 250
   upVelocity: 7
   fallMultiplier: 2.5
   lowJumpMultiplier: 2
