@@ -46,7 +46,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7745541177178491333
 Transform:
   m_ObjectHideFlags: 0
@@ -286,6 +286,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4835ba6a0c44e8c42a15bfc7b391c01b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  knockbackForce: 250
   upVelocity: 7
   fallMultiplier: 2.5
   lowJumpMultiplier: 2
@@ -322,6 +323,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef40c153cd92dc74d844eeacff7f9423, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sprite: {fileID: 7745541177514520052}
   lifePoints: 100
 --- !u!1 &7745541177877848231
 GameObject:
