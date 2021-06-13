@@ -1,9 +1,10 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class RabbitFalls : MonoBehaviour
 {
+    [SerializeField] private float knockbackForce;
+
     // General variables
     Rigidbody2D rb;
 
@@ -72,6 +73,16 @@ public class RabbitFalls : MonoBehaviour
 
     }
 
+    public void Knockback(Vector2 direction, float knockback = 0)
+    {
+        if (knockback == 0)
+        {
+            knockback = knockbackForce;
+        }
+        
+        rb.AddForce(direction * knockback);
+    }
+    
     private IEnumerator WaitToRabbit()
     {
         yield return new WaitForSeconds(waitTime);
