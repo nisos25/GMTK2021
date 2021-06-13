@@ -8,6 +8,17 @@ using Random = UnityEngine.Random;
 public class LifePoints : MonoBehaviour
 {
     [field: SerializeField] public SpriteRenderer Sprite { get; set; }
+
+    public float Touches
+    {
+        get => touches;
+        set
+        {
+            touches = value;
+            originalTouches = touches;
+        }
+    }
+
     [SerializeField] private GameObject[] flies;
     
     public int lifePoints = 100;
@@ -24,11 +35,15 @@ public class LifePoints : MonoBehaviour
     CameraShake shakeScript;
     LevelManager levelScript;
 
+    private float touches = 2;
+    private float originalTouches;
+
     private List<GameObject> fliesToKill = new List<GameObject>();
     
     // Start is called before the first frame update
     void Start()
     {
+        originalTouches = touches;
         for (int i = 0; i < flies.Length; i++)
         {
             fliesToKill.Add(flies[i]);
@@ -98,9 +113,14 @@ public class LifePoints : MonoBehaviour
     {
         //shakeScript.ShakeCamera(2f, 0.1f);
 
-        fliesToKill.First().gameObject.SetActive(false);
-        fliesToKill.RemoveAt(0);
-        
+        touches--;
+        if (touches <= 0)
+        {
+            fliesToKill.First().gameObject.SetActive(false);
+            fliesToKill.RemoveAt(0);
+            touches = originalTouches;
+        }
+
         if (fallScript.isRabbit)
         {
             lifePoints -= flyStealRabbit;
@@ -111,6 +131,16 @@ public class LifePoints : MonoBehaviour
         if (lifePoints <= 10 && !isDead)
         {
             postProcessingGO.SetActive(true);
+        }
+    }
+
+    public void ResetFlies()
+    {
+        for (int i = 0; i < flies.Length; i++)
+        {
+            flies[i].gameObject.SetActive(true);
+            fliesToKill.Add(flies[i]);
+            
         }
     }
 }

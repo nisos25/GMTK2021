@@ -63,12 +63,13 @@ public class RabbitFalls : MonoBehaviour
         {
             rb.velocity = Vector2.up *  upVelocity;
             StartCoroutine(WaitToRabbit());
-
+            
         }
         else
         {
             rb.gravityScale = 1;
             isRabbit = true;
+            lifeScript.Touches = 2;
         }
 
     }
@@ -88,6 +89,7 @@ public class RabbitFalls : MonoBehaviour
         yield return new WaitForSeconds(waitTime);
         rb.gravityScale = 0;
         isRabbit = false;
+        lifeScript.Touches = 10;
     }
 
 }

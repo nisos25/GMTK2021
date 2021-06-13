@@ -69,6 +69,7 @@ public class LevelManager : MonoBehaviour
     {
         lifeScript.isDead = false;
         lifeScript.lifePoints = 100;
+        lifeScript.ResetFlies();
         if (level1.activeSelf)
         {
             playerGO.transform.position = check1.transform.position;
