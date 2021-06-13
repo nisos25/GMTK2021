@@ -77,9 +77,6 @@ public class PlayerMovement : MonoBehaviour
                 spriteAnim.SetInteger("moveAnim", 2);
             }
 
-
-
-            
         }
         else
         {
